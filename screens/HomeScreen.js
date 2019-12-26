@@ -10,12 +10,18 @@ import {
     View,
     Alert
 } from 'react-native';
+const io = require('socket.io-client');
+
+
+
 
 export default class HomeScreen extends Component {
 
     constructor(props) {
         super(props);
         this.state = {login: '', password: ''};
+        let socket = io.connect("https://dry-falls-07378.herokuapp.com/");
+        socket.on("connection", (messages) => console.log(messages || "error: no messages"));
     }
 
     render() {
@@ -26,11 +32,7 @@ export default class HomeScreen extends Component {
                     contentContainerStyle={styles.contentContainer}>
                     <View style={styles.welcomeContainer}>
                         <Image
-                            source={
-                                __DEV__
-                                    ? require('../assets/images/robot-prod.png')
-                                    : require('../assets/images/robot-dev.png')
-                            }
+                            source={require('../assets/images/robot-prod.png')}
                             style={styles.welcomeImage}
                         />
                     </View>
@@ -69,13 +71,14 @@ export default class HomeScreen extends Component {
                     <TouchableOpacity
                         style={styles.buttonOrange}
                         title="Press me"
-                        onPress={() => this.props.navigation.navigate('Chats')}>
+                        onPress={() => this.props.navigation.navigate("Chats")}>
+                        // onPress={() => socket.emit('message', { data: 'Hello Server' })}>
                         <Text style={styles.buttonTextWhite}>Log in</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonWhite}
                         title="Press me"
-                        onPress={() => Alert.alert('Simple Button pressed')}>
+                        onPress={() => this.props.navigation.navigate("Register")}>
                         <Text style={styles.buttonTextOrange}>Register</Text>
                     </TouchableOpacity>
 
